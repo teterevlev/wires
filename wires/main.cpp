@@ -1,11 +1,4 @@
-/*
- * wires.cpp
- *
- * Created: 21.02.2017 17:51:26
- * Author : odama
- */ 
-
-#define F_CPU 8000000
+#define F_CPU 16000000
 #include <avr/io.h>
 #include <util/delay.h>
 static const uint8_t mask[5] = {
@@ -16,17 +9,17 @@ static const uint8_t mask[5] = {
 	0b11110111
 };
 void openDoor(){
-	PORTC = 0b00010000;
+	PORTC = 0b00000100;
 	_delay_ms(500);
-	PORTC = 0b00011000;
+	PORTC = 0b00010100;
 	_delay_ms(200);
-	PORTC = 0b00010000;
-	_delay_ms(200);
+	PORTC = 0b00000100;
+	_delay_ms(300);
 	PORTC = 0b00000000;
 }
 bool checkWires(){
 	for(uint8_t i=0; i<5; i++){
-		DDRB = 1<<i;
+		DDRB = (1<<i);
 		_delay_ms(10);
 		if(PIND != mask[i]) return false;
 	}
@@ -34,11 +27,9 @@ bool checkWires(){
 }
 int main(void)
 {
-    DDRB = 0;
-	DDRD = 0;
-	DDRC = 0b00011000;
+	DDRC = 0b00010100;
 	PORTD = 0xff;
-    while (1) 
+    while (1)
     {
 		if(checkWires()){
 			openDoor();
